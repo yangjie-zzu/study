@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>博主注册</title>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script>
+$(function(){
+	$("#reg").click(function(){
+		var username=$("#username").val();
+		var password=$("#password").val();
+		$.ajax({
+			type:"post",
+			url:"reg",
+			dataType:'html',
+			data:'username='+username+'&password='+password,
+			success:function(msg){
+				$("#msg").empty();
+				$("#msg").html(msg);
+			},
+			error:function(){
+				$("#msg").empty();
+				$("#msg").html("与服务器连接失败！");
+			}
+		});
+	});
+});
+
+</script>
+</head>
+<body>
+<div>
+<div>
+	用户名：<input id="username" type="text" name="username" /><br/>
+	<span></span>
+	密码：<input id="password" type="password" name="password" /><br/>
+	<span></span>
+<div>
+<div id="msg"></div>
+<button id="reg">注册</button>
+</div>
+</div>
+</div>
+</body>
+</html>

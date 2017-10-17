@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>登录博客</title>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#login").click(function(){
+		var username=$("#username").val();
+		var password=$("#password").val();
+		if(("#rememberMe").attr('checked')){
+			$.cookie("username",username);
+			$.cookie("password",password);
+		}else{
+			$.cookie("username",username,{expires:-1});
+			$.cookie("password",password,{expires:-1});
+		}
+		$.ajax({
+			type:"post",
+			url:"login",
+			data:"username="+username+"&password="+password,
+			dataType:"html",
+			success:function(msg){
+				$("#msg").empty();
+				$("#msg").html(msg);
+			},
+			error:function(){
+				$("#msg").empty();
+				$("#msg").html("与服务器连接失败！");
+			}
+		});
+	});
+});
+</script>
+<style>
+</style>
+</head>
+<body>
+<div>
+用户名：<input id="username" type="text"><br/>
+密码：<input id="password" type="password"><br/>
+<input id="rememberMe" type="checkbox">记住我<br/>
+<div>
+<div id="msg"></div>
+<button id="login">登录</button>
+</div>
+</div>
+</body>
+</html>

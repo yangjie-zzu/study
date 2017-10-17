@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.dao.BloggerDao">
+	
+	<resultMap type="Blogger" id="BloggerResult">
+		<result property="id" column="id"/>
+		<result property="userName" column="userName"/>
+		<result property="password" column="password"/>
+		<result property="nickName" column="nickName"/>
+		<result property="sign" column="sign"/>
+		<result property="proFile" column="proFile"/>
+		<result property="imageName" column="imageName"/>
+	</resultMap>
+	
+	<select id="isExistUserName" parameterType="String" resultType="boolean">
+		select count(*) from blogger where username=#{userName}
+	</select>
+	
+	<insert id="insertBlogger" useGeneratedKeys="true" keyProperty="id" parameterType="Blogger">
+		insert into blogger values(null,#{userName},#{password},#{nickName},#{sign},#{proFile},#{imageName})
+	</insert>
+	
+	<select id="isExistBlogger" parameterType="String" resultType="boolean">
+		select count(*) from blogger where username=#{0} and password=#{1}
+	</select>
+	
+	<select id="getBloggerByUserName" parameterType="String" resultMap="BloggerResult">
+		select * from blogger where username=#{userName}
+	</select>
+	
+</mapper>
