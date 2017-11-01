@@ -19,6 +19,12 @@
   	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener> 
   
+  <listener>    
+        <listener-class>    
+            org.springframework.web.context.request.RequestContextListener
+        </listener-class>    
+  </listener>
+  
   <!-- 激活Tomcat的defaultServlet来处理静态文件 -->
   <servlet-mapping>  
     <servlet-name>default</servlet-name>  

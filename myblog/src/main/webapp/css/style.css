@@ -1,0 +1,46 @@
+@CHARSET "UTF-8";
+.tool
+{
+	width:100%;
+	overflow:hidden;
+	margin:auto auto 10px auto;
+	border-bottom:1px #ccc solid;
+}
+ul
+{
+	list-style-type:none;
+	margin:0;
+	padding:0;
+}
+.tool li
+{
+	display:inline;
+}   
+a:link 
+{   
+	font-size: 12px;   
+	color: #000000;   
+	text-decoration: none;   
+}   
+a:visited 
+{   
+	font-size: 12px;   
+	color: #000000;   
+	text-decoration: none;   
+}   
+a:hover 
+{   
+	font-size: 12px;   
+	color: #999999;   
+	text-decoration: underline;   
+}
+#toptext
+{
+	font-size:15px;
+	text-align:center;
+	letter-spacing:15px;
+}
+#msg
+{
+	font-size:10px;
+}

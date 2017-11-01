@@ -3,13 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <title>登录博客</title>
+<link type="text/css" href="css/style.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="js/main.js"></script>
 <script type="text/javascript">
 $(function(){
+	logined();
 	$("#login").click(function(){
-		var username=$("#username").val();
-		var password=$("#password").val();
-		if(("#rememberMe").attr('checked')){
+		var username=$("#input[placeholder='用户名']").val();
+		var password=$("#input[placeholder='密码']").val();
+		if($("#rememberMe").attr('checked')){
 			$.cookie("username",username);
 			$.cookie("password",password);
 		}else{
@@ -20,10 +24,15 @@ $(function(){
 			type:"post",
 			url:"login",
 			data:"username="+username+"&password="+password,
-			dataType:"html",
+			dataType:"json",
 			success:function(msg){
 				$("#msg").empty();
-				$("#msg").html(msg);
+				if(!msg.logined){
+					$("#msg").html("登录成功，正在跳转。。。");
+					window.location.href=msg.msg;
+				}else{
+					$("#msg").html(msg.msg);
+				}
 			},
 			error:function(){
 				$("#msg").empty();
@@ -34,15 +43,63 @@ $(function(){
 });
 </script>
 <style>
+#login
+{
+	border:0;
+}
+input.up
+{
+	width:145px;
+	height:24px;
+	display:block;
+	margin:6px auto 5px auto;
+}
+input#rememberMe
+{
+	height:10px;
+}
+label
+{
+	font-size:10px;
+	vertical-align:text-top;
+	moz-user-select: -moz-none;
+	-moz-user-select: none;
+	-o-user-select:none;
+	-khtml-user-select:none;
+	-webkit-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+}
+#logindiv
+{
+	overflow:hidden;
+}
+#login
+{
+	width:150px;
+}
 </style>
 </head>
 <body>
-<div>
-用户名：<input id="username" type="text"><br/>
-密码：<input id="password" type="password"><br/>
-<input id="rememberMe" type="checkbox">记住我<br/>
-<div>
+<div class="tool">
+<ul style="float:left">
+<li><a href="index.html">主页</a></li>
+<li><a href="#types">分类</a></li>
+<li><a href="#about">关于</a></li>
+</ul>
+<ul style="float:right">
+<li><a id="li1" href="login.html">登录</a></li>
+<li><a id="li2" href="register.html">注册</a></li>
+</ul>
+</div>
+<div style="width:150px; margin:0 auto;">
+<div id="toptext">登录</div>
+<input class="up" type="text" placeholder="用户名" autocomplete="off">
+<input class="up" type="text" placeholder="密码" autocomplete="off">
+<input id="rememberMe" type="checkbox" style="float:left;">
+<label for="rememberMe">下次自动登录</label>
 <div id="msg"></div>
+<div id="logindiv">
 <button id="login">登录</button>
 </div>
 </div>

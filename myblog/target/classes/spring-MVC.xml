@@ -17,13 +17,22 @@
 
 	
 	
-	<!-- 解决@ResponseBody中文乱码 -->
     <mvc:annotation-driven>
-        <mvc:message-converters>
+        <mvc:message-converters register-defaults="true">
+			<!-- 解决@ResponseBody中文乱码 -->
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <constructor-arg value="UTF-8" />
-            </bean>
-        </mvc:message-converters>
+            </bean>   
+        	<!--json处理-->    
+        	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">    
+            	<property name="supportedMediaTypes">    
+                	<list>    
+                    	<value>application/json;charset=UTF-8</value>    
+                    	<value>text/html;charset=UTF-8</value>    
+                	</list>    
+            	</property>    
+        	</bean>    
+    	</mvc:message-converters>
     </mvc:annotation-driven>
 
 	<!-- 视图解析器 -->

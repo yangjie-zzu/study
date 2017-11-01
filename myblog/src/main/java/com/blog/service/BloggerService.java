@@ -9,47 +9,82 @@ import org.springframework.stereotype.Service;
 
 import com.blog.dao.BloggerDao;
 import com.blog.entity.Blogger;
-import com.blog.util.Md5Encod;
+import com.blog.util.AscCheck;
+import com.blog.util.Md5Encode;
+import com.blog.util.RegExp;
 
 @Service("bloggerService")
 public class BloggerService {
 	
+	@SuppressWarnings("unused")
 	private static Logger logger=Logger.getLogger(BloggerService.class);
 	
 	@Resource
 	private BloggerDao bloggerDao;
 	
 	public String addBlogger(Blogger blogger) throws NoSuchAlgorithmException{
-		logger.info(blogger.getUserName()+"注册");
-		String userName=blogger.getUserName();
-		String password=blogger.getPassword();
-		if(userName==null||userName==""||password==null||password==""){
-			return "用户输入密码不能为空";
-		}
-		if(!bloggerDao.isExistUserName(blogger.getUserName())){
-			blogger.setPassword(Md5Encod.encodingByMd5(blogger.getPassword()));
-			bloggerDao.insertBlogger(blogger);
-			return "注册成功";
+		if(RegExp.match(blogger.getUserName(), "^[a-zA-Z0-9](((-|_)(?!(-|_)))|[a-zA-Z0-9]){2,14}[a-zA-Z0-9]$")&&
+				RegExp.match(blogger.getEmail(), "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$")){
+			if(AscCheck.check(blogger.getPassword())&&blogger.getPassword().length()>=6&&blogger.getPassword().length()<=16){
+				blogger.setPassword(Md5Encode.encodingByMd5(blogger.getPassword()));
+				int length=AscCheck.length(blogger.getNickName());
+				if(length>=6&&length<=16){
+					if(bloggerDao.insertBlogger(blogger)!=0){
+						return "{\"flag\":true}";
+					}else{
+						return "{\"flag\":false,\"error\":\"插入失败\"}";
+					}
+				}else{
+					return "{\"flag\":false,\"error\":\"非法昵称\"}";
+				}
+			}else{
+				return "{\"flag\":false,\"error\":\"非法密码\"}";
+			}
 		}else{
-			return "用户名已存在";
+			return "{\"flag\":false,\"error\":\"非法用户名或非法邮箱\"}";
+		}
+	}
+	
+	public String bloggerReged(String userName){
+		if(bloggerDao.isExistUserName(userName)){
+			return "{\"flag\":true}";
+		}else{
+			return "{\"flag\":false}";
+		}
+	}
+	
+	public String emailreged(String email){
+		if(bloggerDao.isExistEmail(email)){
+			return "{\"flag\":true}";
+		}else{
+			return "{\"flag\":false}";
 		}
 	}
 	
 	public String bloggerLogin(String userName,String password,HttpSession session) throws NoSuchAlgorithmException{
 		if(userName==null||userName==""||password==null||password==""){
-			return "用户名和密码不能为空";
+			return "{\"logined\":false,\"msg\":\"用户名和密码不能为空\"}";
 		}
 		if(!bloggerDao.isExistUserName(userName)){
-			return "用户不存在,<a href='register.html'>注册</a>";
+			return "{\"logined\":false,\"msg\":\"用户不存在,<a href='register.html'>注册</a>\"}";
 		}
 		if(password!=null&&password!=""){
-			password=Md5Encod.encodingByMd5(password);
+			password=Md5Encode.encodingByMd5(password);
 		}
 		if(bloggerDao.isExistBlogger(userName, password)){
 			session.setAttribute("blogger", bloggerDao.getBloggerByUserName(userName));
-			return "登录成功";
+			return "{\"logined\":true,\"msg\":\"index.html\"}";
 		}else{
-			return "用户名或密码错误";
+			return "{\"logined\":false,\"msg\":\"用户名或密码错误\"}";
+		}
+	}
+	
+	public String logined(HttpSession session){
+		Blogger blogger=(Blogger) session.getAttribute("blogger");
+		if(blogger!=null){
+			return "{\"logined\":true,\"name\":\""+blogger.getUserName()+"\"}";
+		}else{
+			return "{\"logined\":false}";
 		}
 	}
 

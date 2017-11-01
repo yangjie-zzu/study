@@ -1,14 +1,37 @@
 package com.blog.entity;
 
+import java.util.Date;
+
 public class Blogger {
 
 	private Integer id;
 	private String userName;
 	private String password;
+	private String email;
+	private String emailvalidate;
 	private String nickName;
 	private String sign;
-	private String proFile;
+	private String profile;
 	private String imageName;
+	private Date createtime;
+	public String getEmailvalidate() {
+		return emailvalidate;
+	}
+	public void setEmailvalidate(String emailvalidate) {
+		this.emailvalidate = emailvalidate;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public Date getCreatetime() {
+		return createtime;
+	}
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -39,11 +62,11 @@ public class Blogger {
 	public void setSign(String sign) {
 		this.sign = sign;
 	}
-	public String getProFile() {
-		return proFile;
+	public String getProfile() {
+		return profile;
 	}
-	public void setProFile(String proFile) {
-		this.proFile = proFile;
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 	public String getImageName() {
 		return imageName;

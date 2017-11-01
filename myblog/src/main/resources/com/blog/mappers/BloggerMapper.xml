@@ -5,12 +5,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.blog.dao.BloggerDao">
 	
 	<resultMap type="Blogger" id="BloggerResult">
-		<result property="id" column="id"/>
+		<id property="id" column="id"/>
 		<result property="userName" column="userName"/>
 		<result property="password" column="password"/>
 		<result property="nickName" column="nickName"/>
+		<result property="email" column="email"/>
+		<result property="emailvalidate" column="emailvalidate"/>
 		<result property="sign" column="sign"/>
-		<result property="proFile" column="proFile"/>
+		<result property="profile" column="profile"/>
 		<result property="imageName" column="imageName"/>
 	</resultMap>
 	
@@ -18,8 +20,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(*) from blogger where username=#{userName}
 	</select>
 	
+	<select id="isExistEmail" parameterType="String" resultType="boolean">
+		select count(*) from blogger where email=#{email}
+	</select>
+	
 	<insert id="insertBlogger" useGeneratedKeys="true" keyProperty="id" parameterType="Blogger">
-		insert into blogger values(null,#{userName},#{password},#{nickName},#{sign},#{proFile},#{imageName})
+		insert into blogger(userName,password,email,nickName,profile,sign) values(#{userName},#{password},#{email},#{nickName},#{profile},#{sign})
 	</insert>
 	
 	<select id="isExistBlogger" parameterType="String" resultType="boolean">

@@ -2,44 +2,373 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>博主注册</title>
+<title>注册</title>
+<link type="text/css" href="css/style.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-<script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
 $(function(){
-	$("#reg").click(function(){
-		var username=$("#username").val();
-		var password=$("#password").val();
+	logined();
+	$("#button button").click(function(){
+		reg();
+	});
+});
+var usernameflag=false;
+var passwordflag=false;
+var repasswordflag=false;
+var nicknameflag=false;
+var emailflag=false;
+function usernamecheck(){
+	var username=$("#username input").val();
+	var unpattern=/^[a-zA-Z0-9](((-|_)(?!(-|_)))|[a-zA-Z0-9]){2,14}[a-zA-Z0-9]$/;
+	var tip=$("#username .tips");
+	var tipheight=tip.css("height");
+	if(unpattern.test(username)){
+		usernamereged(username,tip,tipheight);
+	}else{
+		tip.css({"color":"red","font-size":"100%","line-height":tipheight});
+		if(username.length<4){
+			tip.html("用户名最低4位");
+		}else if(username.length>16){
+			tip.html("用户名最高16位");
+		}else if(/[^a-zA-Z0-9_-]/.test(username)){
+			tip.html("请输入-、_、字母或数字");
+		}else if(/^[-_]\S*$/.test(username)||/^\S*[-_]$/.test(username)){
+			tip.html("-和_不能用于开头或结尾");
+		}else if(/[-_][-_]/){
+			tip.html("-和_不能相邻");
+		}
+	}
+}
+
+function usernamereged(username,tip,tipheight){
+	$.ajax({
+		type:"post",
+		url:"reged",
+		data:"username="+username,
+		dataType:"json",
+		success:function(msg){
+			if(!msg.flag){
+				tip.html("<img src='icon/correct.png'/>");
+				usernameflag=true;
+			}else{
+				tip.css({"color":"red","font-size":"100%","line-height":tipheight});
+				tip.html("用户名已存在，<a href='login.html'>登录</a>");
+			}
+		},
+		error:function(){
+			tip.css({"color":"red","font-size":"100%","line-height":tipheight});
+			tip.html("网络连接错误");
+		}
+	})
+}
+
+function passwordcheck(){
+	var password=$("#password input").val();
+	var tip=$("#password .tips");
+	for(var i=0;i<password.length;i++){
+		var cc=password.charCodeAt(i);
+		if(cc<0||cc>128){
+			tip.css({"color":"red"});
+			tip.html("请输入ASCII字符");
+			return;
+		}
+	}
+	if(password.length>=6&&password.length<=16){
+		tip.css({"padding-top":"3px"});
+		tip.html("<img src='icon/correct.png'/>");
+		passwordflag=true;
+	}else{
+		tip.css({"color":"red"});
+		if(password.length<6){
+			tip.html("密码不能少于6位");
+		}else if(password.length>16){
+			tip.html("密码不能多于16位");
+		}
+	}
+}
+
+function repasswordcheck(){
+	var repassword=$("#repassword input").val();
+	var password=$("#password input").val();
+	var tip=$("#repassword .tips");
+	if(repassword.length==0){
+		tip.css({"color":"red"});
+		tip.html("确认密码不能为空");
+	}else if(repassword==password){
+		tip.css({"padding-top":"3px"});
+		tip.html("<img src='icon/correct.png'/>");
+		repasswordflag=true;
+	}else{
+		tip.css({"color":"red"});
+		tip.html("两次密码不一致");
+	}
+}
+
+function emailcheck(){
+	var email=$("#email input").val();
+	var emailpattern=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+	var tip=$("#email .tips");
+	if(email.length==0){
+		tip.css({"color":"red"});
+		tip.html("邮箱不能为空");
+	}else if(emailpattern.test(email)){
+		emailreged(email,tip);
+	}else{
+		tip.css({"color":"red"});
+		tip.html("邮箱不合法");
+	}
+}
+
+function emailreged(email,tip){
+	$.ajax({
+		Type:"post",
+		url:"emailreged",
+		data:"email="+email,
+		dataType:"json",
+		success:function(msg){
+			if(!msg.flag){
+				tip.css({"padding-top":"3px"});
+				tip.html("<img src='icon/correct.png'/>");
+				emailflag=true;
+			}else{
+				tip.css({"color":"red"});
+				tip.html("邮箱已注册");
+			}
+		},
+		error:function(){
+			tip.css({"color":"red"});
+			tip.html("网络连接错误");
+		}
+	})
+}
+
+function nicknamecheck(){
+	var nickname=$("#nickname input").val();
+	var reallength=0;
+	var charcode=-1;
+	for(var i=0;i<nickname.length;i++){
+		charcode=nickname.charCodeAt(i);
+		if(charcode>=0&&charcode<=128){
+			reallength++;
+		}else{
+			reallength+=2;
+		}
+	}
+	var tip=$("#nickname .tips");
+	if(reallength>=3&&reallength<=16){
+		tip.css({"padding-top":"3px"});
+		tip.html("<img src='icon/correct.png'/>");
+		nicknameflag=true;
+	}else{
+		tip.css({"color":"red"});
+		if(reallength<3){
+			tip.html("昵称不能少于3位");
+		}else{
+			tip.html("昵称不能多于16位");
+		}
+	}
+}
+
+function autofill(){
+	var nicknameinput=$("#nickname input");
+	var nickname=$("#username input").val();
+	nicknameinput.attr("value",nickname);
+}
+
+function reg(){
+	if(usernameflag&&passwordflag&&repasswordflag&&nicknameflag&&emailflag){
 		$.ajax({
 			type:"post",
 			url:"reg",
-			dataType:'html',
-			data:'username='+username+'&password='+password,
+			data:JSON.stringify({
+				userName:$("#username input").val(),
+				password:$("#password input").val(),
+				nickName:$("#nickname input").val(),
+				email:$("#email input").val(),
+				profile:$("#profile textarea").val(),
+				sign:$("#sign input").val()
+			}),
+			contentType:"application/json;charset=utf-8",
+			dataType:"json",
 			success:function(msg){
-				$("#msg").empty();
-				$("#msg").html(msg);
+				if(msg.flag){
+					$("#regtips").css("color","green");
+					$("#regtips").html("注册成功，正在跳转。。。");
+					window.location.href="regsuccess.html";
+				}else{
+					$("#regtips").html("注册失败，重新注册！");
+				}
 			},
-			error:function(){
-				$("#msg").empty();
-				$("#msg").html("与服务器连接失败！");
+			error:function(xhr,textStatus,errorThrown){
+				$("#regtips").html("网络连接错误："+xhr.status+";"+xhr.statusText+";"+xhr.readyState+";"+textStatus+";"+errorThrown);
 			}
 		});
-	});
-});
-
+	}else{
+		
+	}
+}
 </script>
+<style>
+#regdiv
+{
+	margin: 0 auto;
+}
+#topreg
+{
+	width:600px;
+	margin: 0 auto;
+	text-align:center;
+	
+}
+.regline
+{
+	width:750px;
+	margin:11px auto;
+	overflow:hidden;
+}
+.regtext
+{
+	float:left;
+	text-align:right;
+	width:230px;
+	padding:10px 0;
+}
+.reginput
+{
+	margin:0 auto;
+	width:235px;
+	float:left;
+	padding:10px 1px;
+}
+.reginput span
+{
+	color:red;
+}
+.tips
+{
+	float:left;
+	margin-left:0px;
+	padding-top:10.5px;
+	margin-top:3px;
+}
+#username .tips
+{
+	font-size:14px;
+	padding-top:3px;
+}
+.tips img
+{
+	width:28px;
+	height:28px;
+	margin-top:5px;
+	margin-left:0
+}
+.tips a
+{
+	font-size:100%;
+	color:blue;
+}
+.regline input
+{
+	height:25px;
+	width:220px;
+}
+.opt
+{
+	margin-left:8.28px;
+}
+
+#button
+{
+	margin:0 auto;
+	width:600px;
+	text-align:center;
+}
+#button button
+{
+	width:150px;
+}
+#regtips
+{
+	color:red;
+}
+</style>
 </head>
 <body>
-<div>
-<div>
-	用户名：<input id="username" type="text" name="username" /><br/>
-	<span></span>
-	密码：<input id="password" type="password" name="password" /><br/>
-	<span></span>
-<div>
-<div id="msg"></div>
-<button id="reg">注册</button>
+<div class="tool">
+<ul style="float:left">
+<li><a href="index.html">主页</a></li>
+<li><a href="#types">分类</a></li>
+<li><a href="#about">关于</a></li>
+</ul>
+<ul style="float:right">
+<li><a id="li1" href="login.html">登录</a></li>
+<li><a id="li2" href="register.html">注册</a></li>
+</ul>
+</div>
+<div id="regdiv">
+<div id="topreg">注册</div>
+<div class="regline" id="username">
+<div class="regtext">用户名：
+</div>
+<div class="reginput">
+<span>*</span><input type="text" onblur="usernamecheck();">
+</div>
+<div class="tips">用户名由4-16位字母、数字、-或_字符组成。<br/>-和_不能相邻，不能作为开头或结尾。</div>
+</div>
+<div class="regline" id="password">
+<div class="regtext">密码：
+</div>
+<div class="reginput">
+<span>*</span><input type="password" onblur="passwordcheck();">
+</div>
+<div class="tips">输入6-16位密码</div>
+</div>
+<div class="regline" id="repassword">
+<div class="regtext">确认密码：
+</div>
+<div class="reginput">
+<span>*</span><input type="password" onblur="repasswordcheck();">
+</div>
+<div class="tips">再次输入密码</div>
+</div>
+<div class="regline" id="email">
+<div class="regtext">邮箱：
+</div>
+<div class="reginput">
+<span>*</span><input type="text" onblur="emailcheck();">
+</div>
+<div class="tips">密码丢失时使用该邮箱找回</div>
+</div>
+<div class="regline" id="nickname">
+<div class="regtext">昵称：
+</div>
+<div class="reginput">
+<span>*</span><input type="text" onfocus="autofill();" onblur="nicknamecheck();">
+</div>
+<div class="tips">输入3-16位昵称，默认为用户名</div>
+</div>
+<div class="regline" id="profile" style="height:auto;">
+<div class="regtext">简介：
+</div>
+<div class="reginput" style="width:400px;">
+<textarea class="opt" rows="10" cols="36" maxlength="255" onchange="this.value=this.value.substring(0, 255)" onkeydown="this.value=this.value.substring(0, 255)" onkeyup="this.value=this.value.substring(0, 255)"
+placeholder="输入255字以内介绍自己"></textarea>
 </div>
 </div>
+<div class="regline" id="sign">
+<div class="regtext">个性签名：
+</div>
+<div class="reginput">
+<input class="opt" type="text" style="width:250px;" maxlength="30" placeholder="限输入30字">
+</div>
+</div>
+</div>
+<div id="button">
+<div id="regtips">
+</div>
+<button>注册</button>
 </div>
 </body>
 </html>
