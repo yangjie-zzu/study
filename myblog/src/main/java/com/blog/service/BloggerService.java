@@ -66,14 +66,14 @@ public class BloggerService {
 			return "{\"logined\":false,\"msg\":\"用户名和密码不能为空\"}";
 		}
 		if(!bloggerDao.isExistUserName(userName)){
-			return "{\"logined\":false,\"msg\":\"用户不存在,<a href='register.html'>注册</a>\"}";
+			return "{\"logined\":false,\"msg\":\"用户"+userName+"不存在,<a href='register.html'>注册</a>\"}";
 		}
 		if(password!=null&&password!=""){
 			password=Md5Encode.encodingByMd5(password);
 		}
 		if(bloggerDao.isExistBlogger(userName, password)){
 			session.setAttribute("blogger", bloggerDao.getBloggerByUserName(userName));
-			return "{\"logined\":true,\"msg\":\"index.html\"}";
+			return "{\"logined\":true,\"msg\":\""+userName+"\"}";
 		}else{
 			return "{\"logined\":false,\"msg\":\"用户名或密码错误\"}";
 		}
@@ -82,7 +82,7 @@ public class BloggerService {
 	public String logined(HttpSession session){
 		Blogger blogger=(Blogger) session.getAttribute("blogger");
 		if(blogger!=null){
-			return "{\"logined\":true,\"name\":\""+blogger.getUserName()+"\"}";
+			return "{\"logined\":true,\"msg\":\""+blogger.getUserName()+"\"}";
 		}else{
 			return "{\"logined\":false}";
 		}

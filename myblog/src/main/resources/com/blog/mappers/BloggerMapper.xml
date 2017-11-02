@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<select id="isExistUserName" parameterType="String" resultType="boolean">
-		select count(*) from blogger where username=#{userName}
+		select count(*) from blogger where userName=#{userName} limit 1
 	</select>
 	
 	<select id="isExistEmail" parameterType="String" resultType="boolean">

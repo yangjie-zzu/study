@@ -11,11 +11,11 @@
 $(function(){
 	logined();
 	$("#login").click(function(){
-		var username=$("#input[placeholder='用户名']").val();
-		var password=$("#input[placeholder='密码']").val();
-		if($("#rememberMe").attr('checked')){
-			$.cookie("username",username);
-			$.cookie("password",password);
+		var username=$("[placeholder='用户名']").val();
+		var password=$("[placeholder='密码']").val();
+		if($("#rememberMe").is(":checked")){
+			$.cookie("username",username,{expires:365});
+			$.cookie("password",password,{expires:365});
 		}else{
 			$.cookie("username",username,{expires:-1});
 			$.cookie("password",password,{expires:-1});
@@ -26,10 +26,9 @@ $(function(){
 			data:"username="+username+"&password="+password,
 			dataType:"json",
 			success:function(msg){
-				$("#msg").empty();
-				if(!msg.logined){
+				if(msg.logined){
 					$("#msg").html("登录成功，正在跳转。。。");
-					window.location.href=msg.msg;
+					window.location.href="index.html";
 				}else{
 					$("#msg").html(msg.msg);
 				}
