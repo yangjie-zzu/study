@@ -13,9 +13,11 @@ function logined(){
 		success:function(msg){
 			if(msg.logined){
 				$("#li1").attr("href","#");
-				$("#li1").html(msg.msg);
+				$("#li1").text(msg.msg);
 				$("#li2").attr("href","#");
-				$("#li2").html("退出");
+				$("#li2").attr("onclick","return false");
+				$("#li2").text("退出");
+				logoutbind();
 			}else{
 				cookielogin();
 			}
@@ -32,20 +34,37 @@ function logined(){
 function cookielogin(){
 	$.ajax({
 		type:"post",
-		url:"login",
+		url:"autologin",
 		dataType:"json",
 		success:function(msg){
 			if(msg.logined){
+				var link=window.location.url;
 				$("#li1").attr("href","#");
-				$("#li1").html(msg.msg);
-				$("#li2").attr("href","#");
-				$("#li2").html("退出");
+				$("#li1").text(msg.msg);
+				$("#li2").attr("href","");
+				$("#li2").attr("onclick","return false");
+				$("#li2").text("退出");
+				logoutbind();
 			}else{
 				$("#li1").attr("href","login.html");
-				$("#li1").html("登录");
+				$("#li1").text("登录");
 				$("#li2").attr("href","register.html");
-				$("#li2").html("注册");
+				$("#li2").text("注册");
 			}
 		}
+	});
+}
+
+function logoutbind(){
+	$("#li2").click(function(){
+		$.cookie("username","",{expires:-1});
+		$.cookie("password","",{expires:-1});
+		$.ajax({
+			type:"post",
+			url:"account/logout",
+			success:function(){
+				location.reload(true);
+			}
+		})
 	});
 }

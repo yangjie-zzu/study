@@ -16,8 +16,7 @@ import com.blog.util.RegExp;
 @Service("bloggerService")
 public class BloggerService {
 	
-	@SuppressWarnings("unused")
-	private static Logger logger=Logger.getLogger(BloggerService.class);
+	public static Logger logger=Logger.getLogger(BloggerService.class);
 	
 	@Resource
 	private BloggerDao bloggerDao;
@@ -86,6 +85,10 @@ public class BloggerService {
 		}else{
 			return "{\"logined\":false}";
 		}
+	}
+	
+	public void logout(HttpSession session){
+		session.removeAttribute("blogger");
 	}
 
 }

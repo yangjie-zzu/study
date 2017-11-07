@@ -5,6 +5,7 @@
 <title>注册</title>
 <link type="text/css" href="css/style.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="js/main.js"></script>
 <script type="text/javascript">
 $(function(){
@@ -195,7 +196,7 @@ function reg(){
 				if(msg.flag){
 					$("#regtips").css("color","green");
 					$("#regtips").html("注册成功，正在跳转。。。");
-					window.location.href="regsuccess.html";
+					window.location.href="regsuccess.html#"+$("#email input").val();
 				}else{
 					$("#regtips").html("注册失败，重新注册！");
 				}
