@@ -6,6 +6,8 @@
 <link type="text/css" href="css/style.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<script src="js/jquery-3.2.1.js"></script>
+<script src="js/jquery.cookie.js"></script>
 <script src="js/main.js"></script>
 <script type="text/javascript">
 $(function(){
@@ -17,7 +19,6 @@ $(function(){
 var usernameflag=false;
 var passwordflag=false;
 var repasswordflag=false;
-var nicknameflag=false;
 var emailflag=false;
 function usernamecheck(){
 	var username=$("#username input").val();
@@ -144,48 +145,16 @@ function emailreged(email,tip){
 	})
 }
 
-function nicknamecheck(){
-	var nickname=$("#nickname input").val();
-	var reallength=0;
-	var charcode=-1;
-	for(var i=0;i<nickname.length;i++){
-		charcode=nickname.charCodeAt(i);
-		if(charcode>=0&&charcode<=128){
-			reallength++;
-		}else{
-			reallength+=2;
-		}
-	}
-	var tip=$("#nickname .tips");
-	if(reallength>=3&&reallength<=16){
-		tip.css({"padding-top":"3px"});
-		tip.html("<img src='icon/correct.png'/>");
-		nicknameflag=true;
-	}else{
-		tip.css({"color":"red"});
-		if(reallength<3){
-			tip.html("昵称不能少于3位");
-		}else{
-			tip.html("昵称不能多于16位");
-		}
-	}
-}
 
-function autofill(){
-	var nicknameinput=$("#nickname input");
-	var nickname=$("#username input").val();
-	nicknameinput.attr("value",nickname);
-}
 
 function reg(){
-	if(usernameflag&&passwordflag&&repasswordflag&&nicknameflag&&emailflag){
+	if(usernameflag&&passwordflag&&repasswordflag&&emailflag){
 		$.ajax({
 			type:"post",
 			url:"reg",
 			data:JSON.stringify({
 				userName:$("#username input").val(),
 				password:$("#password input").val(),
-				nickName:$("#nickname input").val(),
 				email:$("#email input").val(),
 				profile:$("#profile textarea").val(),
 				sign:$("#sign input").val()
@@ -198,7 +167,7 @@ function reg(){
 					$("#regtips").html("注册成功，正在跳转。。。");
 					window.location.href="regsuccess.html#"+$("#email input").val();
 				}else{
-					$("#regtips").html("注册失败，重新注册！");
+					$("#regtips").html(msg.error);
 				}
 			},
 			error:function(xhr,textStatus,errorThrown){
@@ -297,79 +266,64 @@ function reg(){
 </style>
 </head>
 <body>
-<div class="tool">
-<ul style="float:left">
-<li><a href="index.html">主页</a></li>
-<li><a href="#types">分类</a></li>
-<li><a href="#about">关于</a></li>
-</ul>
-<ul style="float:right">
-<li><a id="li1" href="login.html">登录</a></li>
-<li><a id="li2" href="register.html">注册</a></li>
-</ul>
-</div>
-<div id="regdiv">
-<div id="topreg">注册</div>
-<div class="regline" id="username">
-<div class="regtext">用户名：
-</div>
-<div class="reginput">
-<span>*</span><input type="text" onblur="usernamecheck();">
-</div>
-<div class="tips">用户名由4-16位字母、数字、-或_字符组成。<br/>-和_不能相邻，不能作为开头或结尾。</div>
-</div>
-<div class="regline" id="password">
-<div class="regtext">密码：
-</div>
-<div class="reginput">
-<span>*</span><input type="password" onblur="passwordcheck();">
-</div>
-<div class="tips">输入6-16位密码</div>
-</div>
-<div class="regline" id="repassword">
-<div class="regtext">确认密码：
-</div>
-<div class="reginput">
-<span>*</span><input type="password" onblur="repasswordcheck();">
-</div>
-<div class="tips">再次输入密码</div>
-</div>
-<div class="regline" id="email">
-<div class="regtext">邮箱：
-</div>
-<div class="reginput">
-<span>*</span><input type="text" onblur="emailcheck();">
-</div>
-<div class="tips">密码丢失时使用该邮箱找回</div>
-</div>
-<div class="regline" id="nickname">
-<div class="regtext">昵称：
-</div>
-<div class="reginput">
-<span>*</span><input type="text" onfocus="autofill();" onblur="nicknamecheck();">
-</div>
-<div class="tips">输入3-16位昵称，默认为用户名</div>
-</div>
-<div class="regline" id="profile" style="height:auto;">
-<div class="regtext">简介：
-</div>
-<div class="reginput" style="width:400px;">
-<textarea class="opt" rows="10" cols="36" maxlength="255" onchange="this.value=this.value.substring(0, 255)" onkeydown="this.value=this.value.substring(0, 255)" onkeyup="this.value=this.value.substring(0, 255)"
-placeholder="输入255字以内介绍自己"></textarea>
-</div>
-</div>
-<div class="regline" id="sign">
-<div class="regtext">个性签名：
-</div>
-<div class="reginput">
-<input class="opt" type="text" style="width:250px;" maxlength="30" placeholder="限输入30字">
-</div>
-</div>
-</div>
-<div id="button">
-<div id="regtips">
-</div>
-<button>注册</button>
-</div>
+	<div class="tool">
+		<ul style="float:left">
+			<li><a href="index.html">主页</a></li>
+			<li><a href="#about">关于</a></li>
+		</ul>
+		<ul style="float:right">
+			<li><a href="http://localhost:8080/myblog/write.html">发表博客</a></li>
+			<li><a id="li1" href="login.html">登录</a></li>
+			<li><a id="li2" href="register.html">注册</a></li>
+		</ul>
+	</div>
+	<div id="regdiv">
+		<div id="topreg">注册</div>
+		<div class="regline" id="username">
+			<div class="regtext">用户名：</div>
+			<div class="reginput">
+				<span>*</span><input type="text" onblur="usernamecheck();">
+			</div>
+			<div class="tips">用户名由4-16位字母、数字、-或_字符组成。<br/>-和_不能相邻，不能作为开头或结尾。</div>
+		</div>
+		<div class="regline" id="password">
+			<div class="regtext">密码：</div>
+			<div class="reginput">
+				<span>*</span><input type="password" onblur="passwordcheck();">
+			</div>
+			<div class="tips">输入6-16位密码</div>
+		</div>
+		<div class="regline" id="repassword">
+			<div class="regtext">确认密码：</div>
+			<div class="reginput">
+				<span>*</span><input type="password" onblur="repasswordcheck();">
+			</div>
+			<div class="tips">再次输入密码</div>
+		</div>
+		<div class="regline" id="email">
+			<div class="regtext">邮箱：</div>
+			<div class="reginput">
+				<span>*</span><input type="text" onblur="emailcheck();">
+			</div>
+			<div class="tips">密码丢失时使用该邮箱找回</div>
+		</div>
+		<div class="regline" id="profile" style="height:auto;">
+			<div class="regtext">简介：</div>
+			<div class="reginput" style="width:400px;">
+				<textarea class="opt" rows="10" cols="36" maxlength="255" onchange="this.value=this.value.substring(0, 255)" onkeydown="this.value=this.value.substring(0, 255)" onkeyup="this.value=this.value.substring(0, 255)"
+					placeholder="输入255字以内介绍自己"></textarea>
+			</div>
+		</div>
+		<div class="regline" id="sign">
+			<div class="regtext">个性签名：</div>
+			<div class="reginput">
+				<input class="opt" type="text" style="width:250px;" maxlength="30" placeholder="限输入30字">
+			</div>
+		</div>
+	</div>
+	<div id="button">
+		<div id="regtips"></div>
+		<button>注册</button>
+	</div>
 </body>
 </html>

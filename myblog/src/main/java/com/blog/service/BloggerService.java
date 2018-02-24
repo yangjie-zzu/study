@@ -26,15 +26,10 @@ public class BloggerService {
 				RegExp.match(blogger.getEmail(), "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$")){
 			if(AscCheck.check(blogger.getPassword())&&blogger.getPassword().length()>=6&&blogger.getPassword().length()<=16){
 				blogger.setPassword(Md5Encode.encodingByMd5(blogger.getPassword()));
-				int length=AscCheck.length(blogger.getNickName());
-				if(length>=6&&length<=16){
-					if(bloggerDao.insertBlogger(blogger)!=0){
-						return "{\"flag\":true}";
-					}else{
-						return "{\"flag\":false,\"error\":\"插入失败\"}";
-					}
+				if(bloggerDao.insertBlogger(blogger)!=0){
+					return "{\"flag\":true}";
 				}else{
-					return "{\"flag\":false,\"error\":\"非法昵称\"}";
+					return "{\"flag\":false,\"error\":\"插入失败\"}";
 				}
 			}else{
 				return "{\"flag\":false,\"error\":\"非法密码\"}";

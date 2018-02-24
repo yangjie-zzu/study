@@ -4,11 +4,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.blog.dao.BloggerDao">
 	
-	<resultMap type="Blogger" id="BloggerResult">
+	<resultMap type="Blogger" id="bloggerResult">
 		<id property="id" column="id"/>
 		<result property="userName" column="userName"/>
 		<result property="password" column="password"/>
-		<result property="nickName" column="nickName"/>
 		<result property="email" column="email"/>
 		<result property="emailvalidate" column="emailvalidate"/>
 		<result property="sign" column="sign"/>
@@ -32,8 +31,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(*) from blogger where username=#{0} and password=#{1}
 	</select>
 	
-	<select id="getBloggerByUserName" parameterType="String" resultMap="BloggerResult">
+	<select id="getBloggerByUserName" parameterType="String" resultMap="bloggerResult">
 		select * from blogger where username=#{userName}
+	</select>
+	
+	<select id="getBloggerById" parameterType="Integer" resultMap="bloggerResult">
+		select id,username from blogger where id=#{id}
 	</select>
 	
 </mapper>

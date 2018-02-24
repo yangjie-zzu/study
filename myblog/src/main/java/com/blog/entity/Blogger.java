@@ -1,6 +1,7 @@
 package com.blog.entity;
 
 import java.util.Date;
+import java.util.List;
 
 public class Blogger {
 
@@ -9,11 +10,17 @@ public class Blogger {
 	private String password;
 	private String email;
 	private String emailvalidate;
-	private String nickName;
 	private String sign;
 	private String profile;
 	private String imageName;
 	private Date createtime;
+	private List<Article> articles;
+	public List<Article> getArticles() {
+		return articles;
+	}
+	public void setArticles(List<Article> articles) {
+		this.articles = articles;
+	}
 	public String getEmailvalidate() {
 		return emailvalidate;
 	}
@@ -49,12 +56,6 @@ public class Blogger {
 	}
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	public String getNickName() {
-		return nickName;
-	}
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
 	}
 	public String getSign() {
 		return sign;

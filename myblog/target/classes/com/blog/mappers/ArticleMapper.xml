@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.dao.ArticleDao">
+
+	<resultMap type="Article" id="ArticleResult">
+		<id property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="publishtime" column="publishtime"/>
+		<result property="lasttime" column="lasttime"/>
+		<result property="hit" column="hit"/>
+		<association property="publisher" javaType="Blogger">
+				<id property="id" column="publisherId"/>
+				<result property="userName" column="userName"/>
+				<result property="imageName" column="imageName"/>
+		</association>
+		<association property="type" javaType="Type">
+			<id property="name" column="typename"/>
+		</association>
+		<collection property="comments" column="id" ofType="Comment">
+			<id property="id" column="c_id"/>
+			<result property="content" column="c_content"/>
+			<result property="publishtime" column="c_time"/>
+			<association property="author"  javaType="Blogger">
+				<id property="id" column="c_publisherId"/>
+				<result property="userName" column="c_userName"/>
+				<result property="imageName" column="c_imageName"/>
+			</association>
+		</collection>
+	</resultMap>
+	
+	<insert id="addArticle" useGeneratedKeys="true" keyProperty="id" parameterType="Article">
+		insert into articles(title,content,publisher,type)
+		values(#{title},#{content},#{publisher.id},#{type.name})
+	</insert>
+	
+	<select id="getArticleList" parameterType="Map" resultMap="ArticleResult">
+		select
+			t1.id id,
+			t1.title title,
+			t1.content content,
+			t1.publishtime publishtime,
+			t1.lasttime lasttime,
+			t2.id publisherId,
+			t2.userName userName,
+			t2.imageName imageName,
+			t1.type typename,
+			t1.hit hit
+		from articles t1 left join blogger t2 on t1.publisher=t2.id
+		<where>
+			<if test="publisherId!=null">
+				and id=#{publisherId}
+			</if>
+			<if test="typeName!=null and typeName!=''">
+				and type=#{typeName}
+			</if>
+		</where>
+		order by ${order} desc limit #{start},#{showNum}
+	</select>
+	
+	<select id="getNumOfArticles" parameterType="Map" resultType="Integer">
+		select count(*) from articles
+		<where>
+			<if test="id!=null">
+				id=#{id}
+			</if>
+			<if test="publisherId!=null">
+				and id=#{publisherId}
+			</if>
+			<if test="typeName!=null and typeName!=''">
+				and type=#{typeName}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getArticleById" parameterType="Integer" resultMap="ArticleResult">
+		select
+			t1.id,t1.title,t1.content,t1.publishtime,t1.lasttime,t1.type typename,t1.hit,
+			t2.id publisherId,t2.userName,t2.imageName,
+			t3.id c_id,t3.content c_content,t3.publishtime c_time,
+			t4.id c_publisherId,t4.userName c_userName,t4.imageName c_imageName
+		from (articles t1 left join blogger t2 on t1.publisher=t2.id) left join (comments t3 left join blogger t4 on t3.author=t4.id) on t1.id=t3.artid
+		where t1.id=#{id}
+		order by c_time;
+	</select>
+</mapper>

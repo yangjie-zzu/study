@@ -7,8 +7,8 @@ public class Comment {
 	private Integer id;
 	private String content;
 	private Date publishtime;
-	private String author;
-	private Integer artid;
+	private Blogger author;
+	private Article article;
 	public Integer getId() {
 		return id;
 	}
@@ -27,17 +27,17 @@ public class Comment {
 	public void setPublishtime(Date publishtime) {
 		this.publishtime = publishtime;
 	}
-	public String getAuthor() {
+	public Blogger getAuthor() {
 		return author;
 	}
-	public void setAuthor(String author) {
+	public void setAuthor(Blogger author) {
 		this.author = author;
 	}
-	public Integer getArtid() {
-		return artid;
+	public Article getArticle() {
+		return article;
 	}
-	public void setArtid(Integer artid) {
-		this.artid = artid;
+	public void setArticle(Article article) {
+		this.article = article;
 	}
 
 }

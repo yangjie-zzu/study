@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,10 +7,19 @@
 <link type="text/css" href="css/style.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<script src="js/jquery-3.2.1.js"></script>
+<script src="js/jquery.cookie.js"></script>
 <script src="js/main.js"></script>
 <script type="text/javascript">
 $(function(){
 	logined();
+	var href="index.html"
+	href+=window.location.search;
+	if(href=="index.html"){
+		href+="?order=hit";
+	}
+	$("a[href^='"+href+"']").css({"color":"blue"});
+	loadArticleList();
 });
 </script>
 <style>
@@ -44,30 +54,65 @@ $(function(){
 {
 	width:100%;
 }
+#artList a
+{
+	display:block;
+}
+#artList a:link
+{
+	text-decoration:none;
+	color:black;
+	background:white;
+}
+#artList a:visited
+{
+	text-decoration:none;
+	color:black;
+}
+#artList a:hover
+{
+	text-decoration:none;
+	color:black;
+	background:lightgrey;
+}
+#artList a:active
+{
+	text-decoration:none;
+	color:black;
+}
 </style>
 </head>
 <body>
-<div class="tool">
-<ul style="float:left">
-<li><a href="index.html">主页</a></li>
-<li><a href="#types">分类</a></li>
-<li><a href="#about">关于</a></li>
-</ul>
-<ul style="float:right">
-<li><a id="li1" href="login.html">登录</a></li>
-<li><a id="li2" href="register.html">注册</a></li>
-</ul>
-</div>
-<div id="search">
-<input type="text" placeholder="输入搜索内容"><button>搜索</button>
-</div>
-<div id="newbloglist"></div>
-<div id="right">
-<div id="publish">
-<img alt="发布文章" src="./icon/defaultheadpic.jpg">
-<br/>
-</div>
-<div id="hotblog"></div>
-</div>
+	<div class="tool">
+		<ul style="float:left">
+			<li><a href="index.html">主页</a></li>
+			<li><a href="#about">关于</a></li>
+		</ul>
+		<ul style="float:right">
+			<li><a href="http://localhost:8080/myblog/write.html">发表博客</a></li>
+			<li><a id="li1" href="login.html">登录</a></li>
+			<li><a id="li2" href="register.html">注册</a></li>
+		</ul>
+	</div>
+	<div id="search">
+		<input type="text" placeholder="输入搜索内容"><button>搜索</button>
+	</div>
+	<div id="article" style="margin:auto 15%;">
+		<ul id="tabList">
+			<li><a href="index.html?order=hit">最热</a></li>
+			<li><a href="index.html?order=publishtime">最新</a></li>
+		</ul>
+		<div id="articles">
+			<div id="artList"></div>
+			<div id="bottom">
+				<a id="first">首页</a>
+				<a id="before">上一页</a>
+				<a id="next">下一页</a>
+				<a id="last">末页</a>
+				<input id="pageNum" type="text" onblur="skipPage()">
+				<a id="skip">跳页</a>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

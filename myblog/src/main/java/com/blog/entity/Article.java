@@ -1,17 +1,29 @@
 package com.blog.entity;
 
 import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Article {
 	
 	private Integer id;
 	private String title;
 	private String content;
+	@JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm")
 	private Date publishtime;
 	private Date lasttime;
 	private Blogger publisher;
 	private Type type;
 	private Integer hit;
+	private List<Comment> comments;
+	
+	public List<Comment> getComments() {
+		return comments;
+	}
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
 	public Integer getId() {
 		return id;
 	}
